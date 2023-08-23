@@ -13,14 +13,6 @@ from models.user import User
 from models.place import Place
 from models.review import Review
 from models.amenity import Amenity
-name2class = {
-    'Amenity': Amenity,
-    'City': City,
-    'Place': Place,
-    'State': State,
-    'Review': Review,
-    'User': User
-}
 
 
 class DBStorage:
@@ -63,7 +55,7 @@ class DBStorage:
         return (dic)
 
     def new(self, obj):
-        """creates a new object
+        """creates a new element in the table
         """
         self.__session.add(obj)
 
@@ -73,7 +65,7 @@ class DBStorage:
         self.__session.commit()
 
     def delete(self, obj=None):
-        """delete an element in the table
+        """delete an object in the table
         """
         if obj:
             self.session.delete(obj)
@@ -87,27 +79,6 @@ class DBStorage:
         self.__session = Session()
 
     def close(self):
-        """ ispose of current session if active
+        """ calls close the session
         """
         self.__session.close()
-        
-    def get(self, cls, id):
-        """Retrieve an object"""
-        if cls is not None and type(cls) is str and id is not None and\
-           type(id) is str and cls in name2class:
-            cls = name2class[cls]
-            result = self.__session.query(cls).filter(cls.id == id).first()
-            return result
-        else:
-            return None
-
-    def count(self, cls=None):
-        """Count number of objects in storage"""
-        total = 0
-        if type(cls) == str and cls in name2class:
-            cls = name2class[cls]
-            total = self.__session.query(cls).count()
-        elif cls is None:
-            for cls in name2class.values():
-                total += self.__session.query(cls).count()
-        return total
