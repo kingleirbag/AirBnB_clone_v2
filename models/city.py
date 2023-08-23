@@ -1,21 +1,30 @@
 #!/usr/bin/python3
-""" 0x02. AirBnB clone - MySQL, task 6. DBStorage - States and Cities """
-from sqlalchemy import Column, String
-from sqlalchemy.schema import ForeignKey
+""" holds class City"""
+import models
 from models.base_model import BaseModel, Base
+from os import getenv
+import sqlalchemy
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKey
 
 
 class City(BaseModel, Base):
-    """Defines attributes for `City` as it inherits from `BaseModel`,
-    and ORM properties in relation to table `cities`.
+    """Representation of city """
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        __tablename__ = 'cities'
+        name = Column(String(128),
+                      nullable=False)
+        state_id = Column(String(60),
+                          ForeignKey('states.id'),
+                          nullable=False)
+        places = relationship("Place",
+                              backref="cities",
+                              cascade="all, delete-orphan")
+    else:
+        name = ""
+        state_id = ""
 
-    Attributes:
-        name (Column): name of state, string of max 128 chars
-        state_id (Column): string of max 60 chars, foreign key to `states.id`
-    """
-    __tablename__ = 'cities'
-    name = Column(String(128), nullable=False)
-    state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
-    places = relationship('Place', backref='cities',
-                          cascade='all, delete-orphan')
+    def __init__(self, *args, **kwargs):
+        """initializes city"""
+        super().__init__(*args, **kwargs)
