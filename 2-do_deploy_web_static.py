@@ -3,7 +3,6 @@
 Fabric script that distributes an archive to your web servers
 """
 
-
 from datetime import datetime
 from fabric.api import *
 import os
@@ -11,9 +10,10 @@ import os
 env.hosts = ["54.210.88.216", "100.25.104.112"]
 env.user = "ubuntu"
 
+
 def do_pack():
     """
-        return the archive path if archive has generated correctly.
+        return the archive path if archive has generated.
     """
 
     local("mkdir -p versions")
