@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 
 @app.teardown_appcontext
-def close(self):
+def teardown_appcontext(exception):
     """ Method to close the session """
     storage.close()
 
@@ -17,13 +17,13 @@ def close(self):
 @app.route('/states', strict_slashes=False)
 def state():
     """Render a html page with states"""
-    states = storage.all(State)
+    states = storage.all("State")
     return render_template('9-states.html', states=states, mode='all')
 
 
 @app.route('/states/<id>', strict_slashes=False)
 def state_by_id(id):
-    """Render a html page with cities of that state"""
+    """Render a html page with cities of that state fetched by id"""
     for state in storage.all(State).values():
         if state.id == id:
             return render_template('9-states.html', states=state, mode='id')
